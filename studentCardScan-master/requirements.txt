@@ -1,0 +1,5 @@
+flask==2.0.2
+pillow==8.4.0
+tensorflow==2.9.1
+requests==2.26.0 # Used in testing.pypython app.py
+# pip install flask pillow numpy

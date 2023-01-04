@@ -1,0 +1,116 @@
+{% extends "base.html" %} {% block title %}Main{% endblock %} {% block content %}
+
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='upload_img_css.css') }}" />
+
+    <div class="container mt-5">
+        <div class="row g-2 mb-2">
+            <div class="col-12">
+                <h1 style="color:#212931;text-align: center">BPJS</h1>
+                <hr>
+            </div>
+
+            <form action="/bpjs/upload-image" method="POST" enctype="multipart/form-data">
+                <div class="row m-2 p-2">
+{#                    <div class="col-3"></div>#}
+{#                    <div class="col-2 p-2">#}
+{#                        <label for="inputConfidenceLvl">Confidence Level</label>#}
+{#                    </div>#}
+{#                    <div class="col-4">#}
+{#                        <input type="text" value="60" class="form-control col-10" id="inputConfidenceLvl"#}
+{#                               placeholder="Enter a value" required>#}
+{#                    </div>#}
+{#                    <div class="col-3"></div>#}
+                </div>
+                <div class="row">
+                    <div class="col-11">
+                        <div class="input-group px-2 py-2 rounded-pill bg-white shadow-sm">
+                            <input id="img" name="img" type="file" onchange="readURL(this);"
+                                   class="form-control border-0">
+                            <label id="img-label" for="img" class="font-weight-light text-muted">Choose file</label>
+                            <div class="input-group-append">
+                                <label for="img" class="btn btn-light m-0 rounded-pill px-4"> <i
+                                        class="fa fa-cloud-upload mr-2 text-muted"></i><small
+                                        class="text-uppercase font-weight-bold text-muted">Choose
+                                    file</small></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <button class="btn btn-primary mt-2 demo uk-button uk-button-default" type="submit"
+                                id="btn-upload"
+                                onclick="UIkit.notification({message: 'Please Wait for a while...'})">DEMO
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row g-2">
+            <div class="col-12">
+                {% if final_result is defined %}
+                    <div class="row m-2">
+                        <h2 style="text-align: center">Final Results:</h2><br>
+                        <h5 style="text-align: center">Confidence Level: {{ final_result['Confidence Level'] }}</h5>
+                        <h5 style="text-align: center">BPJS Number: {{ final_result['BPJS Number'] }}</h5>
+                        <h5 style="text-align: center">Name: {{ final_result['Name'] }}</h5>
+                        <h5 style="text-align: center">Card Number: {{ final_result['Card Number'] }}</h5>
+                        <h5 style="text-align: center">Time Taken: {{ final_result['Time Taken'] }}</h5>
+                    </div>
+                {% endif %}
+
+            {% if final_result is defined %}
+                <div class="row">
+                    <button class="btn btn-success m-2" type="button" data-toggle="collapse"
+                            data-target="#preprocessingResults" aria-expanded="true"
+                            aria-controls="preprocessingResults">
+                        Pre-processing Results
+                    </button>
+                </div>
+
+                <div class="collapse m-1" id="preprocessingResults">
+                    <div class="card-body col-12">
+                        <div class="row m-2">
+                            <div class="col-3"></div>
+                            <div class="col-6">
+                                <div class="row"><img src="{{ url_for('bpjs_img_process', filename=raw_image) }}"
+                                                      class="raw-img p-3" style="text-align: center" alt=""></div>
+                                <div class="row"><h5 style="text-align: center">Raw Image</h5></div>
+                            </div>
+                            <div class="col-3"></div>
+                        </div>
+                        <hr>
+                        <div class="row mt-2"><h2 style="color:#212931;text-align: center">Results</h2></div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="row"><img src="{{ url_for('bpjs_img_process', filename=qrCode_image) }}"
+                                                      class="qrCode-img p-3" alt=""></div>
+                                <div class="row"><h5 style="text-align: center">Detected QR Code</h5></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row"><img src="{{ url_for('bpjs_img_process', filename=resized_image) }}"
+                                                      class="resized-img p-3" alt=""></div>
+                                <div class="row"><h5 style="text-align: center">Resized Image</h5></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="row"><img
+                                        src="{{ url_for('bpjs_img_process', filename=threshold_image) }}"
+                                        class="threshold-img p-3" alt=""></div>
+                                <div class="row"><h5 style="text-align: center">Threshold Image</h5></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row"><img
+                                        src="{{ url_for('bpjs_img_process', filename=boxes_text_image) }}"
+                                        class="boxesText-img p-3" alt=""></div>
+                                <div class="row"><h5 style="text-align: center">Detected Texts</h5></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/static/upload_img.js"></script>
+{% endblock %}
